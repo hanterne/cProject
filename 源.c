@@ -24,6 +24,8 @@ int main(void)
 		printf("%d\n", cnt);
 		BeginDrawing();           //开始绘制
 		ClearBackground(WHITE);   //清屏
+
+		DrawTexture(bgTex, 0, 0, WHITE);//绘制图片
 		printf("fps:%d\n", GetFPS()); //绘制帧率
 		EndDrawing();             //结束绘制
 	}
