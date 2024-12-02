@@ -94,5 +94,4 @@ int main(void)
     UnloadTexture(bgTex);
     CloseWindow();
 
-    return 0;
 }
