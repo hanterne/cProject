@@ -18,31 +18,42 @@ void InitPlayer(Player* player, Texture2D* idleTexture, Vector2 startPos, float 
 }
 
 // 更新角色
-void UpdatePlayer(Player* player, Texture2D* idleTexture, Texture2D* upTexture, Texture2D* downTexture, Texture2D* leftTexture, Texture2D* rightTexture) {
+void UpdatePlayer(Player* player, Texture2D* idleTexture, Texture2D* upTexture, Texture2D* downTexture, Texture2D* leftTexture, Texture2D* rightTexture, int upKey, int downKey, int leftKey, int rightKey) {
     player->velocity = (Vector2){ 0, 0 };
 
     // 判断按键
-    if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) {
+    if (IsKeyDown(upKey)) {
         player->velocity.y = -1;
         player->currentTexture = upTexture;
+        printf("Up key pressed\n");
     }
-    if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) {
+    if (IsKeyDown(downKey)) {
         player->velocity.y = 1;
         player->currentTexture = downTexture;
+        printf("Down key pressed\n");
     }
-    if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) {
+    if (IsKeyDown(leftKey)) {
         player->velocity.x = -1;
         player->currentTexture = leftTexture;
+        printf("Left key pressed\n");
     }
-    if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) {
+    if (IsKeyDown(rightKey)) {
         player->velocity.x = 1;
         player->currentTexture = rightTexture;
+        printf("Right key pressed\n");
     }
 
     // 非按键，还原
     if (player->velocity.y == 0 && player->velocity.x == 0) {
         player->currentTexture = idleTexture;
     }
+
+    // 更新位置
+    player->position.x += player->velocity.x * player->speed;
+    player->position.y += player->velocity.y * player->speed;
+
+    // 调试信息
+    printf("Position: (%f, %f), Velocity: (%f, %f), Speed: %f\n", player->position.x, player->position.y, player->velocity.x, player->velocity.y, player->speed);
 }
 
 // 绘制角色
@@ -72,6 +83,7 @@ bool CheckCollision(Player* player, int map[MAP_HEIGHT][MAP_WIDTH], int tileSize
     int playerY = player->position.y / tileSize;
 
     if (map[playerY][playerX] == 1) {
+        printf("Collision detected at position: (%d, %d)\n", playerX, playerY);
         return true;
     }
 
@@ -81,7 +93,7 @@ bool CheckCollision(Player* player, int map[MAP_HEIGHT][MAP_WIDTH], int tileSize
 int main(void)
 {
     // 1. 初始化窗口
-    InitWindow(740, 1100, u8"森林冰火人");
+    InitWindow(1100, 740, u8"森林冰火人");
 
     // 帧率 60
     SetTargetFPS(60);
@@ -124,10 +136,10 @@ int main(void)
     while (!WindowShouldClose())
     {
         // 更新冰娃
-        UpdatePlayer(&icePlayer, &iceIdel, &iceUp, &iceDown, &iceLeft, &iceRight);
+        UpdatePlayer(&icePlayer, &iceIdel, &iceUp, &iceDown, &iceLeft, &iceRight, KEY_W, KEY_S, KEY_A, KEY_D);
 
         // 更新火娃
-        UpdatePlayer(&firePlayer, &fireIdel, &fireUp, &fireDown, &fireLeft, &fireRight);
+        UpdatePlayer(&firePlayer, &fireIdel, &fireUp, &fireDown, &fireLeft, &fireRight, KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT);
 
         // 简单的碰撞检测（防止角色移出屏幕）
         if (icePlayer.position.x < 0) icePlayer.position.x = 0;
