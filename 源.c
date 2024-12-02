@@ -1,6 +1,29 @@
 #include <stdio.h>
 #include "raylib.h"
 
+// 定义重力加速度
+#define GRAVITY 0.5f
+// 定义跳跃速度
+#define JUMP_VELOCITY -10.0f
+
+// 定义纹理和地图元素的标识符
+#define TILE_SIZE 32
+#define MAP_WIDTH 10
+#define MAP_HEIGHT 10
+
+// 地图元素标识符
+#define EMPTY 0
+#define WALL 1
+#define MUD 2
+#define RED_DIAMOND 3
+#define BLUE_DIAMOND 4
+#define ELEVATOR 5
+#define ICE_LAVA 6
+#define FIRE_LAVA 7
+#define EXIT 8
+#define FIRE_DOOR 9
+#define ICE_DOOR 10
+
 // 定义角色结构体
 typedef struct {
     Texture2D* currentTexture;
@@ -18,7 +41,7 @@ void InitPlayer(Player* player, Texture2D* idleTexture, Vector2 startPos, float 
 }
 
 // 更新角色
-void UpdatePlayer(Player* player, Texture2D* idleTexture, Texture2D* upTexture, Texture2D* downTexture, Texture2D* leftTexture, Texture2D* rightTexture, int upKey, int downKey, int leftKey, int rightKey) {
+void UpdatePlayer(Player* player, Texture2D* idleTexture, Texture2D* upTexture, Texture2D* downTexture, Texture2D* leftTexture, Texture2D* rightTexture, int upKey, int downKey, int leftKey, int rightKey, int jumpKey) {
     player->velocity = (Vector2){ 0, 0 };
 
     // 判断按键
@@ -43,6 +66,14 @@ void UpdatePlayer(Player* player, Texture2D* idleTexture, Texture2D* upTexture, 
         printf("Right key pressed\n");
     }
 
+    // 处理跳跃
+    if (IsKeyPressed(jumpKey) && player->velocity.y == 0) {
+        player->velocity.y = JUMP_VELOCITY;
+    }
+
+    // 应用重力
+    player->velocity.y += GRAVITY;
+
     // 非按键，还原
     if (player->velocity.y == 0 && player->velocity.x == 0) {
         player->currentTexture = idleTexture;
@@ -61,21 +92,21 @@ void DrawPlayer(Player* player) {
     DrawTextureV(*(player->currentTexture), player->position, WHITE);
 }
 
+
 // 定义地图
-#define MAP_WIDTH 10
-#define MAP_HEIGHT 10
 int map[MAP_HEIGHT][MAP_WIDTH] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 1, 1, 1, 0, 1, 1, 0, 1},
-    {1, 0, 1, 0, 0, 0, 0, 1, 0, 1},
-    {1, 0, 1, 0, 1, 1, 0, 1, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 1, 1, 1, 1, 1, 1, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+    {1, 0, 2, 3, 4, 0, 5, 0, 0, 1},
+    {1, 0, 1, 1, 1, 1, 0, 1, 0, 1},
+    {1, 0, 0, 0, 0, 0, 6, 7, 1, 1},
+    {1, 1, 1, 1, 1, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 1, 1, 1, 1, 0, 1},
+    {1, 1, 1, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 8, 1},
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
+
 
 // 检查碰撞
 bool CheckCollision(Player* player, int map[MAP_HEIGHT][MAP_WIDTH], int tileSize) {
@@ -124,6 +155,19 @@ int main(void)
     Texture2D fireBottomRight = LoadTexture("Resource/火娃左上.png");
     Texture2D fireBottomLeft = LoadTexture("Resource/火娃左下.png");
 
+    // 加载纹理
+    Texture2D mudTex = LoadTexture("Resource/泥浆.png");
+    Texture2D redDiamondTex = LoadTexture("Resource/红钻.png");
+    Texture2D blueDiamondTex = LoadTexture("Resource/蓝钻.png");
+    Texture2D elevatorTex = LoadTexture("Resource/升降台.png");
+    Texture2D iceLavaTex = LoadTexture("Resource/冰浆.png");
+    Texture2D fireLavaTex = LoadTexture("Resource/火浆.png");
+    Texture2D exitTex = LoadTexture("Resource/出口.png");
+    Texture2D fireDoorTex = LoadTexture("Resource/火门.png");
+    Texture2D iceDoorTex = LoadTexture("Resource/冰门.png");
+
+
+
     // 初始化冰娃
     Player icePlayer;
     InitPlayer(&icePlayer, &iceIdel, (Vector2) { 250, 250 }, 5.0f);
@@ -136,10 +180,10 @@ int main(void)
     while (!WindowShouldClose())
     {
         // 更新冰娃
-        UpdatePlayer(&icePlayer, &iceIdel, &iceUp, &iceDown, &iceLeft, &iceRight, KEY_W, KEY_S, KEY_A, KEY_D);
+        UpdatePlayer(&icePlayer, &iceIdel, &iceUp, &iceDown, &iceLeft, &iceRight, KEY_W, KEY_S, KEY_A, KEY_D, KEY_SPACE);
 
         // 更新火娃
-        UpdatePlayer(&firePlayer, &fireIdel, &fireUp, &fireDown, &fireLeft, &fireRight, KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT);
+        UpdatePlayer(&firePlayer, &fireIdel, &fireUp, &fireDown, &fireLeft, &fireRight, KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, KEY_RIGHT_CONTROL);
 
         // 简单的碰撞检测（防止角色移出屏幕）
         if (icePlayer.position.x < 0) icePlayer.position.x = 0;
@@ -169,6 +213,8 @@ int main(void)
 
         DrawTexture(bgTex, 0, 0, WHITE); // 绘制背景图片
         DrawFPS(0, 0);
+
+
 
         DrawPlayer(&icePlayer); // 绘制冰娃
         DrawPlayer(&firePlayer); // 绘制火娃
