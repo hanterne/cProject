@@ -96,13 +96,13 @@ void DrawPlayer(Player* player) {
 int map[MAP_HEIGHT][MAP_WIDTH] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 1, 1, 1, 0, 1, 0, 0, 1},
-    {1, 0, 1, 1, 1, 1, 0, 1, 0, 1},
-    {1, 0, 0, 0, 0, 0, 1, 1, 1, 1},
-    {1, 1, 1, 1, 1, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 1, 1, 1, 1, 0, 1},
-    {1, 1, 1, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
@@ -158,7 +158,7 @@ void DrawMapElements() {
                 break;
             case FIRE_DOOR:
                 // 根据状态选择火门纹理
-                int fireDoorState = 0; // 根据实际状态选择纹理
+                int fireDoorState = 0; // 这里可以根据实际状态选择纹理
                 switch (fireDoorState) {
                 case 0: DrawTextureV(fireDoorTex0, pos, WHITE); break;
                 case 1: DrawTextureV(fireDoorTex1, pos, WHITE); break;
@@ -169,7 +169,7 @@ void DrawMapElements() {
                 break;
             case ICE_DOOR:
                 // 根据状态选择冰门纹理
-                int iceDoorState = 0; // 根据实际状态选择纹理
+                int iceDoorState = 0; // 这里可以根据实际状态选择纹理
                 switch (iceDoorState) {
                 case 0: DrawTextureV(iceDoorTex0, pos, WHITE); break;
                 case 1: DrawTextureV(iceDoorTex1, pos, WHITE); break;
