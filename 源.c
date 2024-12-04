@@ -106,7 +106,7 @@ int map[MAP_HEIGHT][MAP_WIDTH] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
-// 加载纹理
+// 加载地图元素
 Texture2D mudTex;
 Texture2D redDiamondTex;
 Texture2D blueDiamondTex;
@@ -115,14 +115,14 @@ Texture2D iceLavaTex;
 Texture2D fireLavaTex;
 Texture2D exitTex;
 
-// 加载火门纹理
+// 加载火门
 Texture2D fireDoorTex0;
 Texture2D fireDoorTex1;
 Texture2D fireDoorTex2;
 Texture2D fireDoorTex3;
 Texture2D fireDoorTex4;
 
-// 加载冰门纹理
+// 加载冰门
 Texture2D iceDoorTex0;
 Texture2D iceDoorTex1;
 Texture2D iceDoorTex2;
@@ -157,8 +157,8 @@ void DrawMapElements() {
                 DrawTextureV(exitTex, pos, WHITE);
                 break;
             case FIRE_DOOR:
-                // 根据状态选择火门纹理
-                int fireDoorState = 0; // 这里可以根据实际状态选择纹理
+                // 根据状态选择火门
+                int fireDoorState = 0; //看实际情况
                 switch (fireDoorState) {
                 case 0: DrawTextureV(fireDoorTex0, pos, WHITE); break;
                 case 1: DrawTextureV(fireDoorTex1, pos, WHITE); break;
@@ -168,8 +168,8 @@ void DrawMapElements() {
                 }
                 break;
             case ICE_DOOR:
-                // 根据状态选择冰门纹理
-                int iceDoorState = 0; // 这里可以根据实际状态选择纹理
+                // 根据状态选择冰门
+                int iceDoorState = 0; //看实际情况
                 switch (iceDoorState) {
                 case 0: DrawTextureV(iceDoorTex0, pos, WHITE); break;
                 case 1: DrawTextureV(iceDoorTex1, pos, WHITE); break;
@@ -230,7 +230,7 @@ int main(void)
     Texture2D fireBottomRight = LoadTexture("Resource/火娃左上.png");
     Texture2D fireBottomLeft = LoadTexture("Resource/火娃左下.png");
 
-    // 加载地图元素纹理
+    // 加载地图元素
     mudTex = LoadTexture("Resource/泥浆.png");
     redDiamondTex = LoadTexture("Resource/红钻.png");
     blueDiamondTex = LoadTexture("Resource/蓝钻.png");
@@ -239,14 +239,14 @@ int main(void)
     fireLavaTex = LoadTexture("Resource/火浆.png");
     exitTex = LoadTexture("Resource/出口.png");
 
-    // 加载火门纹理
+    // 加载火门
     fireDoorTex0 = LoadTexture("Resource/火门0.png");
     fireDoorTex1 = LoadTexture("Resource/火门1.png");
     fireDoorTex2 = LoadTexture("Resource/火门2.png");
     fireDoorTex3 = LoadTexture("Resource/火门3.png");
     fireDoorTex4 = LoadTexture("Resource/火门4.png");
 
-    // 加载冰门纹理
+    // 加载冰门
     iceDoorTex0 = LoadTexture("Resource/冰门0.png");
     iceDoorTex1 = LoadTexture("Resource/冰门1.png");
     iceDoorTex2 = LoadTexture("Resource/冰门2.png");
@@ -255,7 +255,7 @@ int main(void)
 
     // 初始化冰娃
     Player icePlayer;
-    InitPlayer(&icePlayer, &iceIdel, (Vector2) { 250, 250 }, 5.0f);
+    InitPlayer(&icePlayer, &iceIdel, (Vector2) { 350, 350 }, 5.0f);
 
     // 初始化火娃
     Player firePlayer;
@@ -307,7 +307,7 @@ int main(void)
         EndDrawing();             // 结束绘制
     }
 
-    // 关闭窗口前卸载纹理
+    // 关闭窗口前卸载图片
     UnloadTexture(bgTex);
     UnloadTexture(iceIdel);
     UnloadTexture(iceUp);
